@@ -35,6 +35,7 @@ T FileDescriptor::CheckSystemCall( string_view s_attempt, T return_value ) const
 }
 
 // fd is the file descriptor number returned by [open(2)](\ref man2::open) or similar
+// fd 是一个文件描述符编号，由 open(2) 或类似的系统调用返回。
 FileDescriptor::FDWrapper::FDWrapper( int fd ) : fd_( fd )
 {
   if ( fd < 0 ) {

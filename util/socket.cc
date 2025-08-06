@@ -45,9 +45,13 @@ Socket::Socket( FileDescriptor&& fd, int domain, int type, int protocol ) // NOL
 }
 
 // get the local or peer address the socket is connected to
+// 获取套接字已连接的本地地址或对端地址
 //! \param[in] name_of_function is the function to call (string passed to CheckSystemCall())
+//\param[in] name_of_function 需要调用的函数名（作为字符串传递给 CheckSystemCall()）
 //! \param[in] function is a pointer to the function
+//\param[in] function 是指向函数的指针
 //! \returns the requested Address
+//\returns 返回请求到的 Address（地址信息）
 Address Socket::get_address( const string& name_of_function,
                              const function<int( int, sockaddr*, socklen_t* )>& function ) const
 {
@@ -147,16 +151,17 @@ void DatagramSocket::send( const string_view payload )
   register_write();
 }
 
-// mark the socket as listening for incoming connections
+// mark the socket as listening for incoming connections 将该套接字标记为监听状态，以接收传入的连接
 //! \param[in] backlog is the number of waiting connections to queue (see [listen(2)](\ref man2::listen))
+//\param[in] backlog 是挂起等待队列的最大连接数（详见 listen(2)）
 void TCPSocket::listen( const int backlog )
 {
   CheckSystemCall( "listen", ::listen( fd_num(), backlog ) );
 }
 
-// accept a new incoming connection
-//! \returns a new TCPSocket connected to the peer.
-//! \note This function blocks until a new connection is available
+// accept a new incoming connection 接受一个新的传入连接
+//! \returns a new TCPSocket connected to the peer.returns 返回一个已与对端建立连接的新的 TCPSocket 对象。
+//! \note This function blocks until a new connection is available \note 注意：此函数会阻塞，直到有新连接可用为止。
 TCPSocket TCPSocket::accept()
 {
   register_read();
@@ -190,7 +195,9 @@ void Socket::setsockopt( const int level, const int option, const string_view op
 }
 
 // allow local address to be reused sooner, at the cost of some robustness
+// 允许本地地址更快地被重用，但会以牺牲部分健壮性为代价
 //! \note Using `SO_REUSEADDR` may reduce the robustness of your application
+//! \note 注意：使用 `SO_REUSEADDR` 可能会降低应用程序的健壮性
 void Socket::set_reuseaddr()
 {
   setsockopt( SOL_SOCKET, SO_REUSEADDR, int { true } );

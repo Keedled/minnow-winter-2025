@@ -6,21 +6,25 @@
 #include <vector>
 
 // A reference-counted handle to a file descriptor
+// 一个指向文件描述符的引用计数句柄
 class FileDescriptor
 {
   // FDWrapper: A handle on a kernel file descriptor.
   // FileDescriptor objects contain a std::shared_ptr to a FDWrapper.
+  // FDWrapper：一种对内核文件描述符的引用。
+  // 文件描述符对象包含一个指向 FDWrapper 的 std::shared_ptr 指针。
   class FDWrapper
   {
   public:
-    int fd_;                    // The file descriptor number returned by the kernel
-    bool eof_ = false;          // Flag indicating whether FDWrapper::fd_ is at EOF
-    bool closed_ = false;       // Flag indicating whether FDWrapper::fd_ has been closed
-    bool non_blocking_ = false; // Flag indicating whether FDWrapper::fd_ is non-blocking
-    unsigned read_count_ = 0;   // The number of times FDWrapper::fd_ has been read
-    unsigned write_count_ = 0;  // The numberof times FDWrapper::fd_ has been written
+    int fd_;                    // The file descriptor number returned by the kernel 由内核返回的文件描述符编号
+    bool eof_ = false;          // Flag indicating whether FDWrapper::fd_ is at EOF 标志，表示 FDWrapper::fd_ 是否处于文件末尾
+    bool closed_ = false;       // Flag indicating whether FDWrapper::fd_ has been closed 标志，表示 FDWrapper::fd_ 是否已被关闭
+    bool non_blocking_ = false; // Flag indicating whether FDWrapper::fd_ is non-blocking 标志，表示 FDWrapper::fd_ 是否为非阻塞模式
+    unsigned read_count_ = 0;   // The number of times FDWrapper::fd_ has been read FDWrapper::fd_ 已被读取的次数
+    unsigned write_count_ = 0;  // The numberof times FDWrapper::fd_ has been written FDWrapper::fd_ 已被写入的次数
 
     // Construct from a file descriptor number returned by the kernel
+    // 根据内核返回的文件描述符编号进行构建
     explicit FDWrapper( int fd );
     // Closes the file descriptor upon destruction
     ~FDWrapper();
@@ -72,6 +76,7 @@ public:
   size_t write( const std::vector<Ref<std::string>>& buffers );
 
   // Close the underlying file descriptor
+  // 关闭底层的文件描述符
   void close() { internal_fd_->close(); }
 
   // Copy a FileDescriptor explicitly, increasing the FDWrapper refcount
